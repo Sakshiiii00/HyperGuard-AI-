@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hybrid Intelligent Malware Detection System — powered by RF, XGBoost, DNN, LSTM, and Autoencoder. Research-grade cybersecurity platform.">
+  <title>HyperGuard AI — Hybrid Malware Detection</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       HYPERGUARD AI — PROFESSIONAL DASHBOARD THEME
+       Academic-grade, modern, readable, clean.
+    ═══════════════════════════════════════════════════════ */
+    :root {
+      /* Backgrounds */
+      --bg:            #f0f2f5;
+      --bg2:           #ffffff;
+      --card:          #ffffff;
+      --card-border:   #e2e8f0;
+      --card-border-h: #2f80ed;
+
+      /* Brand blues */
+      --blue:          #2f80ed;
+      --blue-dark:     #1a65c8;
+      --blue-light:    #ebf3ff;
+      --blue-accent:   #4f9cf9;
+
+      /* Text */
+      --heading:       #0f172a;
+      --text:          #334155;
+      --muted:         #64748b;
+      --subtle:        #94a3b8;
+
+      /* Threat levels */
+      --benign:        #059669;
+      --low:           #3b82f6;
+      --medium:        #d97706;
+      --high:          #ea580c;
+      --critical:      #dc2626;
+
+      /* Design system */
+      --radius-lg:     14px;
+      --radius-md:     10px;
+      --radius-sm:     7px;
+      --transition:    all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Legacy compat */
+      --purple:        #2f80ed;
+      --purple-light:  #4f9cf9;
+      --cyan:          #38bdf8;
+    }
+
+    /* ═══ RESET ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    /* ═══ CANVAS BACKGROUND ════════════════════════════════ */
+    #bg-canvas { display: none; }
+
+    /* ═══ LAYOUT ═══════════════════════════════════════════ */
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 28px 80px;
+    }
+
+    /* ═══ NAV ═══════════════════════════════════════════════ */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0 20px;
+      border-bottom: 2px solid var(--card-border);
+      margin-bottom: 32px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.35rem; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--heading);
+    }
+    .nav-logo svg { width: 34px; height: 34px; }
+    .nav-logo .accent { color: var(--blue); }
+
+    .nav-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 0.73rem; font-weight: 600;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      font-family: 'Roboto Mono', monospace;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .badge .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green  { background: var(--benign); }
+    .dot-grey   { background: var(--subtle); }
+    .dot-cyan   { background: var(--blue); }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.75); }
+    }
+
+    /* ═══ GRID ══════════════════════════════════════════════ */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══ CARD ══════════════════════════════════════════════ */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .card::before { display: none; }
+    .card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 2px 8px rgba(47,128,237,0.1), 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .card-title {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title svg { opacity: 0.7; }
+
+    /* ═══ UPLOAD PANEL ══════════════════════════════════════ */
+    #upload-card { grid-row: 1; }
+
+    .upload-hero h1 {
+      font-size: 1.9rem; font-weight: 800; line-height: 1.2;
+      letter-spacing: -0.03em; margin-bottom: 8px; color: var(--heading);
+    }
+    .upload-hero h1 em { font-style: normal; color: var(--blue); }
+    .upload-hero p {
+      color: var(--muted); font-size: 0.9rem; line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .drop-zone {
+      border: 2px dashed #c7d6e8;
+      border-radius: var(--radius-md);
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: #f8fafc;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(47,128,237,0.1);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;
+    }
+    .drop-icon {
+      width: 52px; height: 52px; margin: 0 auto 12px;
+      background: var(--blue-light);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--blue);
+      transition: var(--transition);
+    }
+    .drop-zone:hover .drop-icon { transform: scale(1.08); background: rgba(47,128,237,0.18); }
+    .drop-label { color: var(--blue); font-weight: 600; font-size: 0.95rem; }
+    .drop-sub   { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+    #file-name-display {
+      margin-top: 12px; font-size: 0.82rem; color: var(--text);
+      font-family: 'Roboto Mono', monospace;
+      opacity: 0; transform: translateY(6px); transition: var(--transition);
+    }
+    #file-name-display.visible { opacity: 1; transform: translateY(0); }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 3px; margin-bottom: 20px;
+      background: #f1f5f9; border-radius: var(--radius-sm);
+      padding: 3px;
+    }
+    .tab {
+      flex: 1; padding: 8px 12px; border-radius: calc(var(--radius-sm) - 2px);
+      font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      border: none;
+      background: transparent; color: var(--muted);
+      transition: var(--transition);
+    }
+    .tab.active {
+      background: #fff; color: var(--blue); font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Submit button */
+    #submit-btn {
+      width: 100%; padding: 14px;
+      background: var(--blue);
+      color: #fff; border: none; border-radius: var(--radius-md);
+      font-size: 0.97rem; font-weight: 700; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(47,128,237,0.3);
+      position: relative; overflow: hidden; margin-top: 16px;
+      letter-spacing: 0.01em;
+    }
+    #submit-btn:hover {
+      background: var(--blue-dark);
+      box-shadow: 0 4px 14px rgba(47,128,237,0.4);
+      transform: translateY(-1px);
+    }
+    #submit-btn:active { transform: translateY(0); }
+    #submit-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-hidden { display: none; }
+
+    /* ═══ RESULTS PANEL ═════════════════════════════════════ */
+    #results-card {
+      grid-row: 1;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 300px; text-align: center;
+    }
+    .empty-state svg { opacity: 0.3; margin-bottom: 16px; color: var(--blue); }
+    .empty-state p   { font-size: 0.9rem; max-width: 220px; line-height: 1.6; color: var(--muted); }
+
+    /* Threat level display */
+    .threat-display { display: none; animation: fadeUp 0.45s ease forwards; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .threat-banner {
+      border-radius: var(--radius-md); padding: 22px 24px;
+      display: flex; align-items: center; gap: 20px;
+      border: 1.5px solid;
+      position: relative; overflow: hidden;
+    }
+    .threat-banner::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.04;
+      background: radial-gradient(ellipse at 20% 50%, currentColor, transparent 65%);
+    }
+    .threat-icon {
+      width: 54px; height: 54px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.07);
+    }
+    .threat-info { flex: 1; }
+    .threat-label {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      opacity: 0.65; margin-bottom: 4px;
+    }
+    .threat-class {
+      font-size: 1.5rem; font-weight: 800;
+      letter-spacing: -0.02em; line-height: 1;
+    }
+    .threat-level-badge {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      text-transform: uppercase;
+      border: 1.5px solid currentColor;
+      opacity: 0.9; margin-top: 8px; display: inline-block;
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* Colors per threat level */
+    .tl-BENIGN   { color: var(--benign);   border-color: rgba(5,150,105,0.3);  background: rgba(5,150,105,0.07);  }
+    .tl-LOW      { color: var(--low);      border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.07); }
+    .tl-MEDIUM   { color: var(--medium);   border-color: rgba(217,119,6,0.3);  background: rgba(217,119,6,0.07);  }
+    .tl-HIGH     { color: var(--high);     border-color: rgba(234,88,12,0.3);  background: rgba(234,88,12,0.07);  }
+    .tl-CRITICAL { color: var(--critical); border-color: rgba(220,38,38,0.3);  background: rgba(220,38,38,0.07);  }
+
+    /* Confidence meter */
+    .confidence-section h4 {
+      font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 14px; font-weight: 700;
+    }
+    .conf-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .conf-label {
+      font-size: 0.75rem; color: var(--text); width: 110px;
+      flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .conf-bar-bg {
+      flex: 1; height: 7px; background: #e2e8f0;
+      border-radius: 100px; overflow: hidden;
+    }
+    .conf-bar-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--blue), #60a5fa);
+      transition: width 0.8s cubic-bezier(0.4,0,0.2,1); width: 0;
+    }
+    .conf-pct { font-size: 0.75rem; color: var(--heading); width: 40px; text-align: right;
+                font-family: 'Roboto Mono', monospace; font-weight: 600; }
+
+    /* Anomaly section */
+    .anomaly-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+      background: #f8fafc; margin-bottom: 6px;
+    }
+    .anomaly-label { font-size: 0.84rem; color: var(--muted); font-weight: 500; }
+    .anomaly-value { font-family: 'Roboto Mono', monospace; font-size: 0.88rem; font-weight: 600; color: var(--heading); }
+    .anom-flag-yes { color: var(--critical); }
+    .anom-flag-no  { color: var(--benign); }
+
+    /* Model meta */
+    .model-meta {
+      font-size: 0.73rem; color: var(--muted);
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-family: 'Roboto Mono', monospace;
+      padding-top: 12px; border-top: 1px solid var(--card-border);
+    }
+
+    /* ═══ SHAP PANEL ════════════════════════════════════════ */
+    #shap-card { display: none; }
+    .shap-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .shap-feat { font-size: 0.75rem; width: 100px; flex-shrink: 0;
+                  font-family: 'Roboto Mono', monospace; color: var(--text);
+                  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .shap-bar-bg {
+      flex: 1; height: 8px; background: #e2e8f0;
+      border-radius: 100px; overflow: hidden;
+    }
+    .shap-bar-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--blue), #60a5fa);
+      transition: width 0.9s cubic-bezier(0.4,0,0.2,1); width: 0;
+    }
+    .shap-val { font-size: 0.73rem; color: var(--heading); width: 50px;
+                text-align: right; font-family: 'Roboto Mono', monospace; font-weight: 600; }
+
+    /* ═══ STATS PANEL ═══════════════════════════════════════ */
+    #stats-section {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 22px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: var(--transition);
+      border-top: 3px solid var(--blue);
+    }
+    .stat-card:hover {
+      box-shadow: 0 4px 14px rgba(47,128,237,0.12);
+      transform: translateY(-2px);
+    }
+    .stat-model { font-size: 0.72rem; color: var(--muted);
+                   text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .stat-metric { font-size: 2.1rem; font-weight: 800; margin: 8px 0 4px;
+                   font-family: 'Roboto Mono', monospace;
+                   color: var(--heading); }
+    .stat-label  { font-size: 0.77rem; color: var(--muted); line-height: 1.5; }
+
+    /* ═══ COMPARISON TABLE ═════════════════════════════════  */
+    #comparison-section { margin-top: 28px; }
+    .comp-table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--card-border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    th {
+      padding: 12px 16px; text-align: left;
+      color: var(--muted); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.71rem;
+      border-bottom: 2px solid var(--card-border);
+      background: #f8fafc;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--card-border);
+      font-family: 'Roboto Mono', monospace;
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td      { background: #f0f4ff; }
+    td.model-name    { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--heading); }
+    td.best          { color: var(--benign); font-weight: 700; }
+
+    /* ═══ FOOTER ════════════════════════════════════════════ */
+    footer {
+      margin-top: 60px; padding: 20px 0;
+      border-top: 1px solid var(--card-border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      color: var(--muted); font-size: 0.77rem;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    /* ═══ TOAST ═════════════════════════════════════════════ */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      padding: 12px 20px; border-radius: var(--radius-sm);
+      background: var(--heading); color: #fff;
+      font-size: 0.85rem; z-index: 9999;
+      opacity: 0; transform: translateY(10px); transition: var(--transition);
+      max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error-toast { background: #dc2626; }
+    .toast.info-toast  { background: var(--blue); }
+
+    /* ═══ SECTION HEADER ════════════════════════════════════ */
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-header h2 {
+      font-size: 1.1rem; font-weight: 700; color: var(--heading);
+    }
+    .section-header .pill {
+      padding: 3px 10px; border-radius: 100px;
+      background: var(--blue-light);
+      border: 1px solid rgba(47,128,237,0.25);
+      color: var(--blue); font-size: 0.72rem; font-weight: 700;
+    }
+
+    /* ═══ MISC HELPER ════════════════════════════════════════ */
+    .divider { height: 1px; background: var(--card-border); margin: 18px 0; }
+    .mt-4 { margin-top: 16px; }
+    .text-mono { font-family: 'Roboto Mono', monospace; }
+    .text-sm { font-size: 0.82rem; }
+    .text-muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- Background Canvas Particle Grid -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════════════════ -->
+  <nav>
+    <div class="nav-logo">
+      <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="16" stroke="#2f80ed" stroke-width="1.5"/>
+        <circle cx="17" cy="17" r="10" fill="#ebf3ff" stroke="#4f9cf9" stroke-width="1"/>
+        <path d="M17 10 L22 14 L22 20 L17 24 L12 20 L12 14 Z" fill="#2f80ed" opacity="0.9"/>
+        <circle cx="17" cy="17" r="2" fill="#ffffff"/>
+      </svg>
+      Hyper<span class="accent">Guard</span> AI
+    </div>
+
+    <div class="nav-badges">
+      <span class="badge" id="badge-rf">
+        <span class="dot" id="dot-rf"></span> Random Forest
+      </span>
+      <span class="badge" id="badge-xgb">
+        <span class="dot" id="dot-xgb"></span> XGBoost
+      </span>
+      <span class="badge" id="badge-dnn">
+        <span class="dot" id="dot-dnn"></span> DNN
+      </span>
+      <span class="badge" id="badge-ae">
+        <span class="dot" id="dot-ae"></span> AutoEncoder
+      </span>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN TWO-COLUMN GRID
+  ══════════════════════════════════════════════════════ -->
+  <div class="main-grid">
+
+    <!-- ── LEFT: Upload Panel ─────────────────────────── -->
+    <div class="card" id="upload-card">
+      <div class="upload-hero">
+        <h1>Intelligent <em>Malware</em> Detection</h1>
+        <p>Hybrid RF + XGBoost + DNN + Autoencoder system for research-grade threat analysis with zero-day anomaly detection and SHAP explainability.</p>
+      </div>
+
+      <!-- Mode Tabs -->
+      <div class="tabs">
+        <button class="tab active" id="tab-single" onclick="switchTab('single')">⚡ Real-Time</button>
+        <button class="tab"        id="tab-batch"  onclick="switchTab('batch')">📦 Batch</button>
+      </div>
+
+      <!-- Single prediction panel -->
+      <div class="tab-panel active" id="panel-single">
+        <form id="single-form">
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" id="csv-file" name="csv_file" accept=".csv" required>
+            <div class="drop-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div class="drop-label">Browse or Drag &amp; Drop</div>
+            <div class="drop-sub">Single-sample CSV with memory features</div>
+            <div id="file-name-display">No file selected</div>
+          </div>
+          <button type="submit" id="submit-btn">
+            <span class="spinner spinner-hidden" id="spinner"></span>
+            <span id="btn-text">Analyze Threat</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Batch prediction panel -->
+      <div class="tab-panel" id="panel-batch">
+        <form id="batch-form">
+          <div class="drop-zone" id="drop-zone-batch">
+            <input type="file" id="csv-file-batch" name="csv_file" accept=".csv" required>
+            <div class="drop-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="3" y1="15" x2="21" y2="15"/>
+                <line x1="9" y1="3" x2="9" y2="21"/>
+              </svg>
+            </div>
+            <div class="drop-label">Browse or Drag &amp; Drop</div>
+            <div class="drop-sub">Multi-row CSV — all rows will be analyzed</div>
+            <div id="file-name-batch" class="file-name">No file selected</div>
+          </div>
+          <button type="submit" id="batch-btn" class="submit-btn" style="width:100%;padding:14px;background:#2f80ed;color:#fff;border:none;border-radius:10px;font-size:0.97rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all 0.22s ease-in-out;box-shadow:0 2px 8px rgba(47,128,237,0.3);margin-top:16px;letter-spacing:0.01em;">
+            <span class="spinner spinner-hidden" id="batch-spinner"></span>
+            <span id="batch-btn-text">Process Batch</span>
+          </button>
+        </form>
+        <div id="batch-results" class="mt-4 text-sm" style="display:none;"></div>
+      </div>
+
+    </div><!-- end upload-card -->
+
+    <!-- ── RIGHT: Results Panel ──────────────────────── -->
+    <div class="card" id="results-card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Analysis Results
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+        <p>Upload a memory feature CSV to begin threat analysis</p>
+      </div>
+
+      <!-- Threat display -->
+      <div class="threat-display" id="threat-display">
+
+        <!-- Threat banner -->
+        <div class="threat-banner" id="threat-banner">
+          <div class="threat-icon" id="threat-icon">🛡️</div>
+          <div class="threat-info">
+            <div class="threat-label">Classification</div>
+            <div class="threat-class" id="threat-class">—</div>
+            <div class="threat-level-badge" id="threat-level-badge">—</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:2.2rem;font-weight:800;font-family:'JetBrains Mono',monospace" id="confidence-pct">—</div>
+            <div class="text-sm text-muted">confidence</div>
+          </div>
+        </div>
+
+        <!-- Confidence per class -->
+        <div class="confidence-section mt-4">
+          <h4>Class Probability Distribution</h4>
+          <div id="conf-bars"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Anomaly detection -->
+        <div class="confidence-section">
+          <h4>Anomaly Detection (Autoencoder)</h4>
+          <div class="anomaly-row" style="margin-bottom:8px;">
+            <span class="anomaly-label">Zero-Day / Anomaly Flag</span>
+            <span class="anomaly-value" id="anomaly-flag">—</span>
+          </div>
+          <div class="anomaly-row" style="margin-bottom:8px;">
+            <span class="anomaly-label">Reconstruction Error (MSE)</span>
+            <span class="anomaly-value" id="anomaly-score">—</span>
+          </div>
+          <div class="anomaly-row">
+            <span class="anomaly-label">Detection Threshold</span>
+            <span class="anomaly-value" id="anomaly-threshold">—</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="divider"></div>
+
+        <!-- Model Contributions -->
+        <div class="confidence-section" id="contributions-section" style="display:none;">
+          <h4>Model Contributions (Hybrid Breakdown)</h4>
+          <div id="model-contrib-rows"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Meta -->
+        <div class="model-meta">
+          <span>🧠 <span id="meta-model">—</span></span>
+          <span>⏱ <span id="meta-ms">—</span> ms</span>
+          <span>🕐 <span id="meta-ts">—</span></span>
+        </div>
+
+      </div><!-- end threat-display -->
+    </div><!-- end results-card -->
+
+  </div><!-- end main-grid -->
+
+  <!-- ══════════════════════════════════════════════════════
+       SHAP EXPLANATION PANEL (shown after prediction)
+  ══════════════════════════════════════════════════════ -->
+  <div class="card mt-4" id="shap-card" style="margin-top:24px;">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SHAP Feature Explanation
+    </div>
+    <p class="text-sm text-muted" style="margin-bottom:18px;">
+      Top features driving the model's classification decision (from training-time SHAP analysis).
+      Higher bar = greater influence on the malware/benign decision.
+    </p>
+    <div id="shap-bars"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       MODEL PERFORMANCE STATS
+  ══════════════════════════════════════════════════════ -->
+  {% if comp_results %}
+  <div id="stats-section">
+    {% for model_name, metrics in comp_results.items() %}
+      {% if metrics.get('accuracy') %}
+      <div class="stat-card">
+        <div class="stat-model">{{ model_name }}</div>
+        <div class="stat-metric">{{ "%.1f"|format(metrics.accuracy * 100) }}%</div>
+        <div class="stat-label">Accuracy &nbsp;|&nbsp;
+          F1: <strong>{{ "%.3f"|format(metrics.f1_macro) }}</strong>
+          {% if metrics.roc_auc %}
+            &nbsp;|&nbsp; AUC: <strong>{{ "%.3f"|format(metrics.roc_auc) }}</strong>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════════════════
+       COMPARISON TABLE
+  ══════════════════════════════════════════════════════ -->
+  {% if comp_results %}
+  <div id="comparison-section" class="card" style="margin-top:24px;">
+    <div class="section-header">
+      <h2>Model Comparison</h2>
+      <span class="pill">Research Grade</span>
+    </div>
+    <div class="comp-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-Macro</th>
+            <th>ROC-AUC</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for model_name, metrics in comp_results.items() %}
+          <tr>
+            <td class="model-name">{{ model_name }}</td>
+            <td>{{ "%.4f"|format(metrics.accuracy) if metrics.accuracy else "—" }}</td>
+            <td>{{ "%.4f"|format(metrics.precision) if metrics.precision else "—" }}</td>
+            <td>{{ "%.4f"|format(metrics.recall) if metrics.recall else "—" }}</td>
+            <td {% if loop.previtem %}
+                   {% if metrics.f1_macro and comp_results.values()|selectattr('f1_macro')|map(attribute='f1_macro')|list|max == metrics.f1_macro %}class="best"{% endif %}
+                {% endif %}>
+              {{ "%.4f"|format(metrics.f1_macro) if metrics.f1_macro else "—" }}
+            </td>
+            <td>{{ "%.4f"|format(metrics.roc_auc) if metrics.roc_auc else "—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════ -->
+  <footer>
+    <span>HyperGuard AI — Hybrid Malware Detection Framework</span>
+    <span>CIC MalMem2022 Dataset · RF + XGB + DNN + AE</span>
+    <span id="footer-time">Server online since {{ startup_time[:19] if startup_time else "—" }}</span>
+  </footer>
+
+</div><!-- end page-wrap -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════ -->
+<script>
+/* ── Canvas background ─────────────────────────────── */
+(function() {
+  const cv   = document.getElementById('bg-canvas');
+  const ctx  = cv.getContext('2d');
+  let W, H, dots = [];
+
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    buildDots();
+  }
+
+  function buildDots() {
+    dots = [];
+    const cols = Math.floor(W / 50);
+    const rows = Math.floor(H / 50);
+    for (let r = 0; r <= rows; r++) {
+      for (let c = 0; c <= cols; c++) {
+        dots.push({
+          x: c * 50, y: r * 50,
+          ox: c * 50, oy: r * 50,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          a: Math.random(),
+        });
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // Lines
+    ctx.strokeStyle = 'rgba(124,58,237,0.06)';
+    ctx.lineWidth = 0.5;
+    const cols = Math.floor(W / 50) + 1;
+    dots.forEach((d, i) => {
+      d.x += d.vx;  d.y += d.vy;
+      if (Math.abs(d.x - d.ox) > 15 || Math.abs(d.y - d.oy) > 15) { d.vx *= -1; d.vy *= -1; }
+      // horizontal line
+      if (i < dots.length - 1 && (i + 1) % cols !== 0) {
+        const n = dots[i + 1];
+        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(n.x, n.y); ctx.stroke();
+      }
+      // vertical line
+      if (i + cols < dots.length) {
+        const n = dots[i + cols];
+        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(n.x, n.y); ctx.stroke();
+      }
+    });
+    // Dots
+    dots.forEach(d => {
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(167,139,250,${0.1 + d.a * 0.2})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+/* ── Model status badges ───────────────────────────── */
+(function() {
+  fetch('/api/models/status')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) return;
+      const ml = data.status.models_loaded;
+      const map = {
+        'dot-rf'  : ml.random_forest,
+        'dot-xgb' : ml.xgboost,
+        'dot-dnn' : ml.dnn,
+        'dot-ae'  : ml.autoencoder,
+      };
+      Object.entries(map).forEach(([id, loaded]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'dot ' + (loaded ? 'dot-green' : 'dot-grey');
+        }
+      });
+    })
+    .catch(() => {});
+})();
+
+/* ── Tab switching ─────────────────────────────────── */
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+/* ── File input feedback ───────────────────────────── */
+const fileInput    = document.getElementById('csv-file');
+const fileDisplay  = document.getElementById('file-name-display');
+const dropZone     = document.getElementById('drop-zone');
+
+fileInput.addEventListener('change', e => {
+  if (e.target.files.length > 0) {
+    fileDisplay.textContent = '📄 ' + e.target.files[0].name;
+    fileDisplay.classList.add('visible');
+  }
+});
+
+// Drag events
+['dragenter','dragover','dragleave','drop'].forEach(ev => {
+  dropZone.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); });
+});
+dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  dropZone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length > 0) {
+    const dt = new DataTransfer();
+    dt.items.add(e.dataTransfer.files[0]);
+    fileInput.files = dt.files;
+    fileDisplay.textContent = '📄 ' + e.dataTransfer.files[0].name;
+    fileDisplay.classList.add('visible');
+  }
+});
+
+/* ── Toast helper ──────────────────────────────────── */
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast show ' + type + '-toast';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+/* ── Threat colors ─────────────────────────────────── */
+const THREAT_COLORS = {
+  'BENIGN'  : '#10b981',
+  'LOW'     : '#3b82f6',
+  'MEDIUM'  : '#f59e0b',
+  'HIGH'    : '#f97316',
+  'CRITICAL': '#ef4444',
+};
+const THREAT_ICONS = {
+  'BENIGN'  : '✅',
+  'LOW'     : '🔵',
+  'MEDIUM'  : '⚠️',
+  'HIGH'    : '🔶',
+  'CRITICAL': '🚨',
+};
+
+/* ── Render prediction result ──────────────────────── */
+function renderResult(pred) {
+  const tl    = pred.threat_level || 'LOW';
+  const color = THREAT_COLORS[tl] || '#64748b';
+  const icon  = THREAT_ICONS[tl]  || '🛡️';
+
+  // Show threat banner
+  const banner = document.getElementById('threat-banner');
+  banner.className = 'threat-banner tl-' + tl;
+
+  document.getElementById('threat-icon').textContent   = icon;
+  document.getElementById('threat-class').textContent  = pred.classification;
+  document.getElementById('threat-level-badge').textContent = tl;
+  document.getElementById('threat-level-badge').className   = 'threat-level-badge';
+  document.getElementById('confidence-pct').textContent = Math.round(pred.confidence * 100) + '%';
+
+  // Confidence bars
+  const barsEl = document.getElementById('conf-bars');
+  barsEl.innerHTML = '';
+  const probs = pred.class_probs || {};
+  Object.entries(probs)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([cls, prob]) => {
+      const pct = Math.round(prob * 100);
+      barsEl.innerHTML += `
+        <div class="conf-bar-wrap">
+          <span class="conf-label" title="${cls}">${cls}</span>
+          <div class="conf-bar-bg"><div class="conf-bar-fill" style="width:0%" data-pct="${pct}"></div></div>
+          <span class="conf-pct">${pct}%</span>
+        </div>`;
+    });
+
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.conf-bar-fill').forEach(b => {
+      b.style.width = b.dataset.pct + '%';
+    });
+  });
+
+  // Anomaly
+  document.getElementById('anomaly-flag').textContent  = pred.is_anomaly ? '⚠ YES' : '✓ NO';
+  document.getElementById('anomaly-flag').className     = 'anomaly-value ' + (pred.is_anomaly ? 'anom-flag-yes' : 'anom-flag-no');
+  document.getElementById('anomaly-score').textContent = pred.anomaly_score != null
+    ? pred.anomaly_score.toFixed(6) : 'N/A (AE not trained yet)';
+  document.getElementById('anomaly-threshold').textContent = pred.ae_threshold != null
+    ? pred.ae_threshold.toFixed(6) : 'N/A';
+
+  // Model contributions (per-model breakdown)
+  const contribs = pred.model_contributions || {};
+  const contribKeys = Object.keys(contribs);
+  const contribSection = document.getElementById('contributions-section');
+  const contribRows    = document.getElementById('model-contrib-rows');
+  if (contribKeys.length > 0) {
+    contribRows.innerHTML = '';
+    contribKeys.forEach(modelName => {
+      const c = contribs[modelName];
+      const pct = Math.round(c.top_confidence * 100);
+      contribRows.innerHTML += `
+        <div class="conf-bar-wrap" style="margin-bottom:12px;">
+          <span class="conf-label" title="${modelName}" style="width:130px;">${modelName} <span style="color:var(--purple-light);font-size:0.7rem;">(w=${c.weight})</span></span>
+          <div class="conf-bar-bg">
+            <div class="conf-bar-fill" style="width:0%;background:linear-gradient(90deg,#10b981,#3b82f6)" data-pct="${pct}"></div>
+          </div>
+          <span class="conf-pct">${pct}%</span>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);margin:-8px 0 10px 140px;font-family:'JetBrains Mono',monospace;">→ predicted: <strong style="color:var(--text)">${c.predicted_class}</strong></div>`;
+    });
+    contribSection.style.display = 'block';
+    requestAnimationFrame(() => {
+      contribRows.querySelectorAll('.conf-bar-fill').forEach(b => { b.style.width = b.dataset.pct + '%'; });
+    });
+  } else {
+    contribSection.style.display = 'none';
+  }
+
+  // Meta
+  document.getElementById('meta-model').textContent = pred.model_used || '—';
+  document.getElementById('meta-ms').textContent    = pred.inference_ms || '—';
+  document.getElementById('meta-ts').textContent    = pred.timestamp
+    ? pred.timestamp.replace('T', ' ').slice(0, 19) + ' UTC' : '—';
+
+  // Show
+  document.getElementById('empty-state').style.display   = 'none';
+  document.getElementById('threat-display').style.display = 'block';
+
+  // SHAP features
+  const feats = pred.top_features || [];
+  if (feats.length > 0) {
+    const shapCard = document.getElementById('shap-card');
+    const shapBars = document.getElementById('shap-bars');
+    shapBars.innerHTML = '';
+    feats.forEach((f, i) => {
+      const pct = Math.round((1 - i / feats.length) * 85 + 15);
+      shapBars.innerHTML += `
+        <div class="shap-bar-wrap">
+          <span class="shap-feat" title="${f}">${f}</span>
+          <div class="shap-bar-bg"><div class="shap-bar-fill" style="width:0%" data-pct="${pct}"></div></div>
+          <span class="shap-val">rank ${i+1}</span>
+        </div>`;
+    });
+    shapCard.style.display = 'block';
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.shap-bar-fill').forEach(b => {
+        b.style.width = b.dataset.pct + '%';
+      });
+    });
+  }
+}
+
+/* ── Single form submit ────────────────────────────── */
+document.getElementById('single-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const file = document.getElementById('csv-file').files[0];
+  if (!file) { showToast('Please select a CSV file first.', 'error'); return; }
+
+  const btn  = document.getElementById('submit-btn');
+  const spin = document.getElementById('spinner');
+  const txt  = document.getElementById('btn-text');
+
+  btn.disabled = true;
+  spin.classList.remove('spinner-hidden');
+  txt.textContent = 'Analyzing …';
+
+  const fd = new FormData();
+  fd.append('csv_file', file);
+
+  try {
+    const res  = await fetch('/api/predict', { method: 'POST', body: fd });
+    const data = await res.json();
+
+    if (!data.success) {
+      showToast('Error: ' + data.error, 'error');
+    } else {
+      renderResult(data.prediction);
+      showToast('Analysis complete ✓', 'info');
+    }
+  } catch (err) {
+    showToast('Network error: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    spin.classList.add('spinner-hidden');
+    txt.textContent = 'Analyze Threat';
+  }
+});
+
+/* ── Batch form submit ─────────────────────────────── */
+document.getElementById('batch-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const file = document.getElementById('csv-file-batch').files[0];
+  if (!file) { showToast('Please select a CSV file.', 'error'); return; }
+
+  const btn  = document.getElementById('batch-btn');
+  const spin = document.getElementById('batch-spinner');
+  const txt  = document.getElementById('batch-btn-text');
+  btn.disabled = true;
+  spin.classList.remove('spinner-hidden');
+  txt.textContent = 'Processing …';
+
+  const fd = new FormData();
+  fd.append('csv_file', file);
+
+  try {
+    const res = await fetch('/api/predict/batch', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json();
+      showToast('Batch error: ' + (err.error || 'Unknown'), 'error');
+      return;
+    }
+
+    // Trigger CSV download
+    const blob     = await res.blob();
+    const url      = URL.createObjectURL(blob);
+    const a        = document.createElement('a');
+    a.href         = url;
+    a.download     = 'batch_predictions.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const rows = res.headers.get('X-Row-Count') || '?';
+    const ms   = res.headers.get('X-Inference-Ms') || '?';
+
+    document.getElementById('batch-results').style.display = 'block';
+    document.getElementById('batch-results').innerHTML = `
+      <div style="color:var(--benign);margin-top:10px;">
+        ✅ Batch complete — <strong>${rows}</strong> rows processed in <strong>${ms}ms</strong>.
+        CSV downloaded automatically.
+      </div>`;
+    showToast(`Batch done: ${rows} rows`, 'info');
+
+  } catch (err) {
+    showToast('Batch failed: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    spin.classList.add('spinner-hidden');
+    txt.textContent = 'Process Batch';
+  }
+});
+</script>
+
+</body>
+</html>
