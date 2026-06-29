@@ -1,0 +1,9 @@
+{
+  "anomaly_threshold": 0.17321176,
+  "threshold_mean": 0.00627322,
+  "threshold_std": 0.08346927,
+  "n_input_features": 14,
+  "test_anomaly_acc": 0.986,
+  "malware_tpr": 0.9741,
+  "benign_fpr": 0.002
+}

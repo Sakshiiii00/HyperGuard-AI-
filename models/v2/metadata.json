@@ -1,0 +1,15 @@
+{
+  "n_raw_features": 51,
+  "n_pca_components": 14,
+  "n_classes": 4,
+  "class_names": [
+    "Benign",
+    "Ransomware",
+    "Spyware",
+    "Trojan"
+  ],
+  "benign_class_idx": 0,
+  "n_train": 93752,
+  "n_test": 11720,
+  "pca_variance_retained": 0.956984
+}

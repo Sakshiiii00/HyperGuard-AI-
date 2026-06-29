@@ -1,0 +1,52 @@
+{
+  "Random Forest": {
+    "accuracy": 0.809,
+    "precision": 0.7164,
+    "recall": 0.7139,
+    "f1_macro": 0.714,
+    "roc_auc": 0.9433,
+    "cv_accuracy_mean": 0.7678,
+    "cv_accuracy_std": 0.0029,
+    "cv_f1_mean": 0.7679,
+    "cv_f1_std": 0.0027,
+    "cv_roc_auc_mean": 0.9319,
+    "best_params": {
+      "max_depth": 15,
+      "max_features": "sqrt",
+      "min_samples_leaf": 4,
+      "n_estimators": 100
+    }
+  },
+  "XGBoost": {
+    "accuracy": 0.8164,
+    "precision": 0.7251,
+    "recall": 0.7246,
+    "f1_macro": 0.7247,
+    "roc_auc": 0.9448,
+    "cv_accuracy_mean": 0.7803,
+    "cv_accuracy_std": 0.0034,
+    "cv_f1_mean": 0.7804,
+    "cv_f1_std": 0.0033,
+    "cv_roc_auc_mean": 0.9379,
+    "best_params": {
+      "learning_rate": 0.1,
+      "max_depth": 6,
+      "n_estimators": 300,
+      "subsample": 0.8
+    }
+  },
+  "DNN": {
+    "accuracy": 0.7596,
+    "precision": 0.6686,
+    "recall": 0.6377,
+    "f1_macro": 0.6228,
+    "roc_auc": 0.9218
+  },
+  "Ensemble (RF+XGB+DNN)": {
+    "accuracy": 0.8121,
+    "precision": 0.719,
+    "recall": 0.7177,
+    "f1_macro": 0.7179,
+    "roc_auc": 0.9437
+  }
+}
